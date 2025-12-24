@@ -490,7 +490,7 @@ class Game:
             cooldown_ratio,
             self.ship_roll,
             self.player.damage_flash_timer,
-            self.enemies,
+            # self.enemies,
             self.player.position,
             self.camera.yaw,
             self.cockpit_sway,

@@ -29,7 +29,6 @@ class HUD:
         player_cooldown=0,
         ship_roll=0.0,
         damage_flash=0.0,
-        enemies=None,
         player_pos=None,
         player_yaw=0.0,
         sway_offset=0.0,
@@ -44,7 +43,6 @@ class HUD:
             player_cooldown: Player shoot cooldown (0.0 to 1.0)
             ship_roll: Current ship banking angle in degrees
             damage_flash: Intensity of damage flash (0.0 to 1.0)
-            enemies: List of enemy entities
             player_pos: Player position Vector3
             player_yaw: Player yaw in degrees
             fps: Frames per second (optional)
@@ -107,11 +105,10 @@ class HUD:
         # Reset Color
         glColor4f(*hud_color)
 
-        # 4. Wireframe Dashboard/Nose and Radar
+        # 4. Wireframe Dashboard/Nose
         # Lowered position (cy - radius * 0.65)
         dashboard_y = cy - radius * 0.65
         self._draw_dashboard(cx, dashboard_y, radius)
-        self._draw_radar(cx, dashboard_y - 20, 60, enemies, player_pos, player_yaw)
 
         # 5. Cockpit Struts
         self._draw_cockpit_struts(cx, cy, self.width, self.height)
@@ -127,8 +124,6 @@ class HUD:
         # --- Render STATIC Text Elements ---
         # Lives (Left side) - as blocks
         self._draw_life_blocks(50, self.height - 50, lives)
-
-        # self._render_text(f"LIVES: {lives}", 50, self.height - 50, self.font)
 
         # Score (Right side)
         self._render_text(f"SCORE: {score}", self.width - 200, self.height - 50, self.font)
@@ -203,90 +198,6 @@ class HUD:
         # Restore HUD color
         glColor4f(0.2, 0.8, 1.0, 0.8)
         glLineWidth(1.0)
-
-    def _draw_radar(self, cx, cy, radius, enemies, player_pos, player_yaw):
-        """Draw tactical radar showing enemies"""
-        if not enemies or not player_pos:
-            return
-
-        # Radar Background (Semi-transparent)
-        glColor4f(0.0, 0.1, 0.2, 0.5)
-        glBegin(GL_TRIANGLE_FAN)
-        glVertex2f(cx, cy)
-        for i in range(361):
-            theta = math.radians(i)
-            glVertex2f(cx + math.cos(theta) * radius, cy + math.sin(theta) * radius)
-        glEnd()
-
-        # Radar Rings
-        glColor4f(0.2, 0.8, 1.0, 0.5)
-        self._draw_arc(cx, cy, radius, 0, 360, 2.0)
-        self._draw_arc(cx, cy, radius * 0.5, 0, 360, 1.0)
-
-        # Crosshairs
-        glBegin(GL_LINES)
-        glVertex2f(cx - radius, cy)
-        glVertex2f(cx + radius, cy)
-        glVertex2f(cx, cy - radius)
-        glVertex2f(cx, cy + radius)
-        glEnd()
-
-        # Player Marker (Center)
-        glColor4f(1.0, 1.0, 1.0, 1.0)
-        glBegin(GL_TRIANGLES)
-        glVertex2f(cx, cy + 4)
-        glVertex2f(cx - 3, cy - 3)
-        glVertex2f(cx + 3, cy - 3)
-        glEnd()
-
-        # Enemy Blips
-        radar_range = 100.0  # Detection range
-
-        # Pre-calculate player direction vectors (2D XZ plane)
-        rad_yaw = math.radians(player_yaw)
-
-        # Front vector (based on yaw)
-        fx = math.cos(rad_yaw)
-        fz = math.sin(rad_yaw)
-
-        # Right vector (front rotated 90 degrees CCW? No, let's verify standard math)
-        # If Yaw -90 is Front (0, -1).
-        # We want Right to be (1, 0).
-        # -90 + 90 = 0. cos(0)=1, sin(0)=0. So Yaw + 90 works.
-        rad_right = math.radians(player_yaw + 90)
-        rx = math.cos(rad_right)
-        rz = math.sin(rad_right)
-
-        glPointSize(3.0)
-        glBegin(GL_POINTS)
-
-        for enemy in enemies:
-            # Relative position vector
-            dx = enemy.position.x - player_pos.x
-            dz = enemy.position.z - player_pos.z
-
-            # Simple distance check
-            dist = math.sqrt(dx * dx + dz * dz)
-            if dist > radar_range:
-                continue
-
-            # Project relative position onto Player's Right and Front vectors
-            # Radar X = dot(relative, right)
-            # Radar Y = dot(relative, front)
-
-            radar_x_proj = dx * rx + dz * rz
-            radar_y_proj = dx * fx + dz * fz
-
-            # Map to radar radius
-            scale = radius / radar_range
-            radar_draw_x = cx + radar_x_proj * scale
-            radar_draw_y = cy + radar_y_proj * scale
-
-            glColor4f(1.0, 0.2, 0.2, 1.0)  # Red for enemies
-            glVertex2f(radar_draw_x, radar_draw_y)
-
-        glEnd()
-        glPointSize(1.0)
 
     def _draw_arc(self, cx, cy, radius, start_angle, end_angle, thickness):
         """Draw a wireframe arc"""
