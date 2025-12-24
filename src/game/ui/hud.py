@@ -461,11 +461,11 @@ class HUD:
         large_font = pygame.font.Font(None, 72)
         self._render_text("GAME OVER", self.width // 2 - 150, self.height // 2 + 50, large_font)
         self._render_text(
-            f"Final Score: {final_score}", self.width // 2 - 100, self.height // 2 - 20, self.font
+            f"Final Score: {final_score}", self.width // 2 - 80, self.height // 2 - 20, self.font
         )
         self._render_text(
             "Press R to Restart or ESC to Quit",
-            self.width // 2 - 180,
+            self.width // 2 - 120,
             self.height // 2 - 80,
             self.small_font,
         )
@@ -505,7 +505,7 @@ class HUD:
         large_font = pygame.font.Font(None, 72)
         self._render_text("PAUSED", self.width // 2 - 100, self.height // 2 + 20, large_font)
         self._render_text(
-            "Press ESC to Resume", self.width // 2 - 120, self.height // 2 - 40, self.small_font
+            "Press ESC to Resume", self.width // 2 - 90, self.height // 2 - 40, self.small_font
         )
 
         glEnable(GL_DEPTH_TEST)
