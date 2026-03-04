@@ -109,4 +109,3 @@ faces and near-black shadows — consistent with ISS photography and space film 
 **HUD state isolation**: The HUD uses `glPushAttrib(GL_ALL_ATTRIB_BITS)` before any
 2D rendering and `glPopAttrib()` afterward, ensuring that disabling lighting/depth for
 text rendering does not corrupt the 3D scene state on subsequent frames.
-

@@ -1,10 +1,4 @@
-from src.game import Game
-
-
-def main():
-    game = Game()
-    game.run()
-
+from src.game.main import main
 
 if __name__ == "__main__":
     main()
