@@ -1,9 +1,9 @@
 [project]
-name = "3d-space-shooter"
-version = "0.1.0"
-description = "A 3D wireframe space shooter game using PyOpenGL"
+name = "3d-space-shooter-minigame2"
+version = "0.2.0"
+description = "3D Space Shooter — Mini Game 2 with lighting, materials, day/night cycle"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "pygame>=2.5.0",
     "PyOpenGL>=3.1.7",
@@ -18,7 +18,7 @@ dev = [
 ]
 
 [project.scripts]
-space-shooter = "main:main"
+space-shooter = "game.main:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -29,8 +29,8 @@ packages = ["src/game"]
 
 [tool.black]
 line-length = 100
-target-version = ['py312']
+target-version = ['py310']
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py310"
