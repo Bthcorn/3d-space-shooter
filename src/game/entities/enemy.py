@@ -8,6 +8,7 @@ from game.engine.materials import ENEMY_MATERIAL_POOL
 from game.config import (
     COLOR_ENEMY,
     ENEMY_SPEED,
+    ENEMY_SCALE,
     ENEMY_HEALTH,
     ENEMY_POINTS,
     ENEMY_SHOOT_INTERVAL,
@@ -34,7 +35,8 @@ class Enemy(Entity):
         super().__init__(position, wire_model, solid_model=solid,
                          material=mat)
 
-        self.radius = 2.5
+        self.scale = (ENEMY_SCALE,) * 3
+        self.radius = 2.5 * ENEMY_SCALE
         self.health = ENEMY_HEALTH
         self.points = ENEMY_POINTS
         self.speed = ENEMY_SPEED

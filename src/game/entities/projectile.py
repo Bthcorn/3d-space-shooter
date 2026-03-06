@@ -27,12 +27,16 @@ class Projectile(Entity):
         self.lifetime = LASER_LIFETIME
         self.radius = 0.3
 
-        # Orient laser along velocity
+        # Orient laser along velocity.
+        # The cylinder model is aligned along +Z. The renderer applies Rx then Ry
+        # (so Ry acts first on vertices). To map +Z -> (dx, dy, dz):
+        #   Rx(rx) * Ry(ry) * Z = (sin(ry), -cos(ry)*sin(rx), cos(ry)*cos(rx))
+        # Solving: ry = atan2(dx, sqrt(dy²+dz²)), rx = atan2(-dy, dz)
         import math
         dx, dy, dz = self.direction.x, self.direction.y, self.direction.z
         self.rotation = [
-            math.atan2(dy, (dx * dx + dz * dz) ** 0.5),
-            math.atan2(dx, dz),
+            math.atan2(-dy, dz),
+            math.atan2(dx, (dy * dy + dz * dz) ** 0.5),
             0,
         ]
 
